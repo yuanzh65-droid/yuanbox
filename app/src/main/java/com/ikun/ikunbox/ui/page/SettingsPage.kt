@@ -359,7 +359,7 @@ private fun AboutSheet(versionName: String, onDismiss: () -> Unit) {
 
 private const val AboutSheetHeightFraction = 0.6f
 
-private const val GITHUB_REPO_URL = "https://github.com/yourname/ikunbox"
+private const val GITHUB_REPO_URL = "https://github.com/yuanzh65-droid/ikunbox"
 
 private fun openExternalUrl(context: Context, url: String) {
     try {
