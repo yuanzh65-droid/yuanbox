@@ -1,6 +1,6 @@
 package com.github.catvod.crawler.js
 
-import com.github.avbox.osc.util.RegexUtils
+import com.ikun.ikunbox.util.RegexUtils
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName

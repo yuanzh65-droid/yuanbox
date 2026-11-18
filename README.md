@@ -3,8 +3,30 @@
 </div>
 
 <div align="center">
-  <img src="images/avbox.svg" width="120" alt="AVBox"/>
+  <img src="images/ikun.jpg" width="120" alt="ikunbox" style="border-radius: 24px"/>
   <br/>
+
+# ikunbox
+
+**ikunbox** 是一款基于 [AVBox](https://github.com/XiaochangXu/AVBox) 二次开发的开源多平台视频播放器框架，使用 Material Design 3 全新设计，仅提供播放界面、源配置管理和本地播放能力。
+
+</div>
+
+## 关于本项目
+
+- **项目名称**：ikunbox
+- **上游项目**：[AVBox](https://github.com/XiaochangXu/AVBox)（原 AudioVideoBox）
+- **技术栈**：Kotlin + Jetpack Compose + Material Design 3，播放内核基于 media3（ExoPlayer）
+- **许可证**：GNU Affero General Public License v3.0（AGPL-3.0）
+
+## 功能特性
+
+- 多平台适配：手机 / 电视 / 宽屏 / 桌面端（桌面端仅支持 py 和 md5 格式的源）
+- 源配置管理：支持自行添加、导入第三方播放源
+- 本地播放：支持蓝光 ISO、m2ts、直播、回看等
+- 多语言：简体中文 / English / 繁體（台灣）/ 繁體（香港）
+
+---
 
 # 免责声明与用户协议
 
@@ -12,7 +34,7 @@
 
 ## 一、软件性质
 
-1. AVBox（AudioVideoBox）是一款开源的视频播放器框架，仅提供播放界面、源配置管理和本地播放能力。
+1. ikunbox 是一款开源的视频播放器框架，仅提供播放界面、源配置管理和本地播放能力。
 2. 本软件默认状态下**不预置、不内置、不提供**任何影视内容、直播频道、节目单、订阅服务或第三方解析接口。
 3. 本软件开发者不参与任何内容的制作、上传、存储、分发或运营。
 
@@ -36,6 +58,7 @@
 
 1. 本软件代码以 **GNU Affero General Public License v3.0（AGPL-3.0）** 开源，源代码及许可证详见仓库根目录 `LICENSE` 文件。
 2. 本软件基于以下上游项目开发，相关权利归原作者所有：
+   - [AVBox](https://github.com/XiaochangXu/AVBox)
    - [TVBoxOS](https://github.com/q215613905/TVBoxOS)
 3. 基于本软件进行二次开发或分发时，必须遵守 AGPL-3.0 许可证条款，保留原始版权声明和出处链接，并以相同许可证公开衍生作品的源代码。
 4. 本软件名称、Logo 及相关标识的权利归项目开发者所有，未经授权不得用于商业宣传或误导性使用。

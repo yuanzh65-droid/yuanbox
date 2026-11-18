@@ -1,6 +1,6 @@
 package com.github.catvod.crawler.js
 
-import com.github.avbox.osc.util.AppLog
+import com.ikun.ikunbox.util.AppLog
 import java.util.ArrayDeque
 import java.util.concurrent.ExecutorService
 

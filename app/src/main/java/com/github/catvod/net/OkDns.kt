@@ -1,6 +1,6 @@
 package com.github.catvod.net
 
-import com.github.avbox.osc.util.RegexUtils
+import com.ikun.ikunbox.util.RegexUtils
 
 import java.net.InetAddress
 import java.net.UnknownHostException

@@ -2,8 +2,8 @@ package com.github.catvod.crawler.js
 
 import android.util.Base64
 
-import com.github.avbox.osc.net.HttpClients
-import com.github.avbox.osc.util.AppLog
+import com.ikun.ikunbox.net.HttpClients
+import com.ikun.ikunbox.util.AppLog
 import com.google.common.net.HttpHeaders
 import com.google.gson.JsonElement
 import com.whl.quickjs.wrapper.JSObject
