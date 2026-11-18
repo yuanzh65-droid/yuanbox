@@ -411,6 +411,7 @@ fun HomePage(
                                 onCardClick = { video -> handleCardClick(vm, video, context) },
                                 onCardLongClick = { video -> vodMenu.show(video) },
                                 modifier = Modifier.padding(start = navStart),
+                                showCircularLoading = true,
                             )
                         }
                     }
@@ -659,6 +660,7 @@ private fun PartitionSection(
     onRetry: (() -> Unit)? = null,
     cardWidth: Dp = 110.dp,
     modifier: Modifier = Modifier,
+    showCircularLoading: Boolean = false,
 ) {
     Column(modifier = modifier.padding(vertical = 8.dp)) {
         Row(
@@ -740,6 +742,7 @@ private fun PartitionSection(
                         onLongClick = { onCardLongClick(video) },
                         modifier = Modifier.width(cardWidth),
                         style = VodCardStyle.Stacked,
+                        showCircularLoading = showCircularLoading,
                     )
                 }
                 item(key = "more_$title") {

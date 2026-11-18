@@ -68,6 +68,8 @@ import com.ikun.ikunbox.ui.components.FilterSheet
 import com.ikun.ikunbox.ui.components.SkeletonBox
 import com.ikun.ikunbox.ui.components.VodCard
 import com.ikun.ikunbox.ui.components.VodCardStyle
+import com.ikun.ikunbox.ui.components.animateItemEntrance
+import com.ikun.ikunbox.ui.components.rememberGridEntranceMap
 import com.kyant.capsule.ContinuousCapsule
 import kotlinx.coroutines.flow.first
 
@@ -227,15 +229,28 @@ fun HomeGridLayout(
 
                     HomeViewModel.PartitionState.Ready -> {
                         val videos = tabPartition.videos
+                        val leadingItems = if (tabSort != null && tabSort.filters.isNotEmpty()) 1 else 0
+                        val entranceMap = rememberGridEntranceMap(
+                            tabGridState,
+                            key = tabId,
+                            leadingItemCount = leadingItems,
+                        )
                         itemsIndexed(
                             videos,
                             key = { index, video -> "${index}_${video.id}_${video.name}" },
-                        ) { _, video ->
+                        ) { index, video ->
+                            val entered = entranceMap[index] ?: false
+                            val staggerDelay = (index / gridColumns) * 32
                             VodCard(
                                 video = video,
                                 onClick = { onCardClick(video) },
                                 onLongClick = { onCardLongClick(video) },
+                                modifier = Modifier.animateItemEntrance(
+                                    entered = entered,
+                                    delayMillis = staggerDelay,
+                                ),
                                 style = VodCardStyle.Stacked,
+                                showCircularLoading = true,
                             )
                         }
                         item(key = "more_$tabId", span = { GridItemSpan(maxLineSpan) }) {

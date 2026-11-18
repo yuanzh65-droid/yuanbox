@@ -31,6 +31,7 @@ fun VodCard(
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
     style: VodCardStyle = VodCardStyle.Overlay,
+    showCircularLoading: Boolean = false,
 ) {
     if (style == VodCardStyle.Stacked) {
         Column(modifier = modifier) {
@@ -40,7 +41,7 @@ fun VodCard(
                 shape = RoundedCornerShape(16.dp),
             ) {
                 Box(modifier = Modifier.aspectRatio(2f / 3f)) {
-                    VodPoster(video.name, video.pic, year = video.year, sourceKey = video.sourceKey, tmdbCacheOnly = true, altName = video.en)
+                    VodPoster(video.name, video.pic, year = video.year, sourceKey = video.sourceKey, tmdbCacheOnly = true, altName = video.en, showCircularLoading = showCircularLoading)
                     RatingBadge(video, Modifier.align(Alignment.TopEnd))
                 }
             }
@@ -66,7 +67,7 @@ fun VodCard(
         shape = RoundedCornerShape(16.dp),
     ) {
         Box(modifier = Modifier.aspectRatio(2f / 3f)) {
-            VodPoster(video.name, video.pic, year = video.year, sourceKey = video.sourceKey, tmdbCacheOnly = true, altName = video.en)
+            VodPoster(video.name, video.pic, year = video.year, sourceKey = video.sourceKey, tmdbCacheOnly = true, altName = video.en, showCircularLoading = showCircularLoading)
             Box(
                 modifier = Modifier
                     .fillMaxSize()

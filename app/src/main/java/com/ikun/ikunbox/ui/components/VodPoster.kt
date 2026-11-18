@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -126,6 +127,7 @@ internal fun VodPoster(
     altName: String? = null,
     tmdbPath: String? = null,
     onImage: ((Image) -> Unit)? = null,
+    showCircularLoading: Boolean = false,
 ) {
     val preferLarge = size != PosterSize.THUMB
     val tmdbUrl = if (resolveTmdb && !name.isNullOrBlank() && sourceKey != TMDB_SOURCE_KEY) {
@@ -139,6 +141,7 @@ internal fun VodPoster(
     var posterUrl by remember(pic, siteUrl, tmdbUrl) {
         mutableStateOf(tmdbUrl ?: siteUrl)
     }
+    var isLoading by remember(pic, posterUrl) { mutableStateOf(true) }
     val context = LocalPlatformContext.current
     val request = remember(context, posterUrl, preferLarge) {
         ImageRequest.Builder(context)
@@ -171,20 +174,37 @@ internal fun VodPoster(
             contentDescription = name,
             contentScale = ContentScale.Crop,
             onState = { state ->
-                if (state is AsyncImagePainter.State.Error) {
-                    val fallback = when {
-                        tmdbUrl != null && posterUrl == tmdbUrl -> siteUrl
-                        posterUrl != pic -> pic
-                        else -> null
+                when (state) {
+                    is AsyncImagePainter.State.Error -> {
+                        isLoading = false
+                        val fallback = when {
+                            tmdbUrl != null && posterUrl == tmdbUrl -> siteUrl
+                            posterUrl != pic -> pic
+                            else -> null
+                        }
+                        if (fallback != null && fallback != posterUrl) posterUrl = fallback else showFallback = true
                     }
-                    if (fallback != null && fallback != posterUrl) posterUrl = fallback else showFallback = true
-                } else {
-                    showFallback = false
-                    if (state is AsyncImagePainter.State.Success) onImage?.invoke(state.result.image)
+                    is AsyncImagePainter.State.Success -> {
+                        isLoading = false
+                        showFallback = false
+                        onImage?.invoke(state.result.image)
+                    }
+                    else -> {
+                        showFallback = false
+                    }
                 }
             },
             modifier = Modifier.fillMaxSize(),
         )
+        if (showCircularLoading && isLoading && !showFallback) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(48.dp),
+            ) {
+                CircularLoadingOverlay(modifier = Modifier.fillMaxSize()) {}
+            }
+        }
     }
 }
 
