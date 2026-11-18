@@ -16,8 +16,8 @@ android {
         applicationId = "com.ikun.ikunbox"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 34
-        versionName = "1.3.0"
+        versionCode = 1
+        versionName = "1.0.1"
         multiDexEnabled = true
         ndk {
             abiFilters += setOf("arm64-v8a")
