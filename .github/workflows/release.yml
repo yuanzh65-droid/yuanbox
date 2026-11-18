@@ -79,26 +79,21 @@ jobs:
           set -euo pipefail
           mkdir -p .key
           if [ -n "${KEYSTORE_B64:-}" ]; then
-            echo "$KEYSTORE_B64" | base64 -d > .key/ikunbox-release.jks
+            echo "$KEYSTORE_B64" | base64 -d > .key/app-release.jks
             echo "::notice::使用已缓存的 RELEASE_KEYSTORE secret"
           else
             echo "::notice::未找到 RELEASE_KEYSTORE secret，生成新密钥"
             keytool -genkeypair -v \
-              -keystore .key/ikunbox-release.jks \
+              -keystore .key/app-release.jks \
               -alias key0 \
               -keyalg RSA -keysize 2048 -validity 10000 \
               -storepass 123456 -keypass 123456 \
               -dname "CN=ikunbox, OU=ikunbox, O=ikunbox, L=Unknown, ST=Unknown, C=CN"
           fi
-          ls -l .key/ikunbox-release.jks
+          ls -l .key/app-release.jks
 
       - name: Build release APK
         run: ./gradlew assembleRelease --no-daemon --stacktrace
-        env:
-          RELEASE_STORE_FILE: .key/ikunbox-release.jks
-          RELEASE_KEY_ALIAS: key0
-          RELEASE_STORE_PASSWORD: 123456
-          RELEASE_KEY_PASSWORD: 123456
 
       - name: Rename & verify APK
         id: apk
