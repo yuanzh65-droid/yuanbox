@@ -158,6 +158,11 @@ fun HomeGridLayout(
                 availableWidthDp = (maxWidth - 32.dp - navStart).value.toInt(),
                 minColumns = 3,
             )
+            val entranceMap = rememberGridEntranceMap(
+                tabGridState,
+                key = tabId,
+                leadingItemCount = if (tabSort != null && tabSort.filters.isNotEmpty()) 1 else 0,
+            )
             LazyVerticalGrid(
                 columns = GridCells.Fixed(gridColumns),
                 state = tabGridState,
@@ -229,12 +234,6 @@ fun HomeGridLayout(
 
                     HomeViewModel.PartitionState.Ready -> {
                         val videos = tabPartition.videos
-                        val leadingItems = if (tabSort != null && tabSort.filters.isNotEmpty()) 1 else 0
-                        val entranceMap = rememberGridEntranceMap(
-                            tabGridState,
-                            key = tabId,
-                            leadingItemCount = leadingItems,
-                        )
                         itemsIndexed(
                             videos,
                             key = { index, video -> "${index}_${video.id}_${video.name}" },
