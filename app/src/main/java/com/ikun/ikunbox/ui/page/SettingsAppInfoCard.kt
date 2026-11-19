@@ -59,7 +59,7 @@ internal fun AppInfoHeaderCard(versionName: String) {
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_launcher_foreground),
+                    painter = painterResource(R.drawable.ic_launcher_foreground_png),
                     contentDescription = null,
                     tint = contentColor,
                     modifier = Modifier
