@@ -1,5 +1,6 @@
 package com.yuanbox.yuanbox.ui.page
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,7 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,8 +35,6 @@ private val HeaderCardShape = RoundedCornerShape(32.dp)
 private val VersionPillShape = RoundedCornerShape(24.dp)
 
 private val AppBadgeSize = 76.dp
-
-private const val AppIconGlyphScale = 1.26f
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -58,13 +57,12 @@ internal fun AppInfoHeaderCard(versionName: String) {
                     .background(scheme.surfaceBright),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(
+                Image(
                     painter = painterResource(R.drawable.ic_launcher_foreground_png),
                     contentDescription = null,
-                    tint = contentColor,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(AppBadgeSize)
-                        .scale(AppIconGlyphScale),
+                        .size(AppBadgeSize),
                 )
             }
             Spacer(Modifier.width(20.dp))
