@@ -11,9 +11,9 @@ import com.github.catvod.crawler.Spider
 import com.github.catvod.crawler.SpiderNull
 import com.github.catvod.crawler.SpiderReaper
 import com.github.catvod.net.OkHttp
-import com.ikun.ikunbox.BuildConfig
-import com.ikun.ikunbox.net.HttpClients
-import com.ikun.ikunbox.util.AppLog
+import com.yuanbox.yuanbox.BuildConfig
+import com.yuanbox.yuanbox.net.HttpClients
+import com.yuanbox.yuanbox.util.AppLog
 
 import org.json.JSONException
 import org.json.JSONObject

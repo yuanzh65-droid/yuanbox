@@ -2,8 +2,8 @@ package com.github.catvod.net
 
 import androidx.collection.ArrayMap
 
-import com.ikun.ikunbox.util.AppLog
-import com.ikun.ikunbox.util.SSL.SSLSocketFactoryCompat
+import com.yuanbox.yuanbox.util.AppLog
+import com.yuanbox.yuanbox.util.SSL.SSLSocketFactoryCompat
 
 import java.net.ProxySelector
 import java.security.cert.X509Certificate

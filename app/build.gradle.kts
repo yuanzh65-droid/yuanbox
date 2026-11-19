@@ -8,12 +8,12 @@ plugins {
 }
 
 android {
-    namespace = "com.ikun.ikunbox"
+    namespace = "com.yuanbox.yuanbox"
     compileSdk = libs.versions.compileSdk.get().toInt()
     ndkVersion = libs.versions.ndk.get()
 
     defaultConfig {
-        applicationId = "com.ikun.ikunbox"
+        applicationId = "com.yuanbox.yuanbox"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
@@ -105,7 +105,7 @@ ksp {
 androidComponents {
     onVariants { variant ->
         variant.outputs.forEach { output ->
-            output.outputFileName.set("ikunbox_${variant.buildType}.apk")
+            output.outputFileName.set("yuanbox_${variant.buildType}.apk")
         }
     }
 }

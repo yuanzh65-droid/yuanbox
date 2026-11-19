@@ -2,8 +2,8 @@ package com.github.catvod.crawler.js
 
 import androidx.annotation.Keep
 
-import com.ikun.ikunbox.util.KV
-import com.ikun.ikunbox.util.AppLog
+import com.yuanbox.yuanbox.util.KV
+import com.yuanbox.yuanbox.util.AppLog
 import com.whl.quickjs.wrapper.Function
 
 class local {

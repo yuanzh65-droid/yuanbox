@@ -32,7 +32,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ikunbox"
+rootProject.name = "yuanbox"
 include(":app")
 include(":quickjs")
 include(":pyramid")

@@ -3,12 +3,12 @@ package com.github.catvod.crawler
 import android.util.Log
 
 import com.github.catvod.crawler.js.JsSpider
-import com.ikun.ikunbox.io.FileUtils
-import com.ikun.ikunbox.util.AppContextHolder
-import com.ikun.ikunbox.util.AppLog
-import com.ikun.ikunbox.util.MD5
-import com.ikun.ikunbox.util.RegexUtils
-import com.ikun.ikunbox.util.net.Http
+import com.yuanbox.yuanbox.io.FileUtils
+import com.yuanbox.yuanbox.util.AppContextHolder
+import com.yuanbox.yuanbox.util.AppLog
+import com.yuanbox.yuanbox.util.MD5
+import com.yuanbox.yuanbox.util.RegexUtils
+import com.yuanbox.yuanbox.util.net.Http
 
 import java.io.File
 import java.io.FileOutputStream

@@ -4,8 +4,8 @@ import android.os.Build
 import android.util.Log
 
 import com.github.catvod.crawler.python.IPyLoader
-import com.ikun.ikunbox.base.App
-import com.ikun.ikunbox.util.AppLog
+import com.yuanbox.yuanbox.base.App
+import com.yuanbox.yuanbox.util.AppLog
 import com.undcover.freedom.pyramid.PythonLoader
 import com.undcover.freedom.pyramid.PythonSpider
 

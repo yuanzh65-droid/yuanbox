@@ -2,8 +2,8 @@ package com.github.catvod.crawler.js
 
 import android.webkit.CookieManager
 
-import com.ikun.ikunbox.net.HttpClients
-import com.ikun.ikunbox.util.AppLog
+import com.yuanbox.yuanbox.net.HttpClients
+import com.yuanbox.yuanbox.util.AppLog
 
 import okhttp3.Cookie
 import okhttp3.CookieJar

@@ -2,7 +2,7 @@ package com.github.catvod.crawler.js
 
 import android.util.Base64
 
-import com.ikun.ikunbox.util.AppLog
+import com.yuanbox.yuanbox.util.AppLog
 
 import java.nio.charset.Charset
 import java.security.Key

@@ -3,18 +3,18 @@
 </div>
 
 <div align="center">
-  <img src="images/ikun.jpg" width="120" alt="ikunbox" style="border-radius: 24px"/>
+  <img src="images/ikun.jpg" width="120" alt="yuanbox" style="border-radius: 24px"/>
   <br/>
 
-# ikunbox
+# yuanbox
 
-**ikunbox** 是一款基于 [AVBox](https://github.com/XiaochangXu/AVBox) 二次开发的开源多平台视频播放器框架，使用 Material Design 3 全新设计，仅提供播放界面、源配置管理和本地播放能力。
+**yuanbox** 是一款基于 [AVBox](https://github.com/XiaochangXu/AVBox) 二次开发的开源多平台视频播放器框架，使用 Material Design 3 全新设计，仅提供播放界面、源配置管理和本地播放能力。
 
 </div>
 
 ## 关于本项目
 
-- **项目名称**：ikunbox
+- **项目名称**：yuanbox
 - **上游项目**：[AVBox](https://github.com/XiaochangXu/AVBox)（原 AudioVideoBox）
 - **技术栈**：Kotlin + Jetpack Compose + Material Design 3，播放内核基于 media3（ExoPlayer）
 - **许可证**：GNU Affero General Public License v3.0（AGPL-3.0）
@@ -34,7 +34,7 @@
 
 ## 一、软件性质
 
-1. ikunbox 是一款开源的视频播放器框架，仅提供播放界面、源配置管理和本地播放能力。
+1. yuanbox 是一款开源的视频播放器框架，仅提供播放界面、源配置管理和本地播放能力。
 2. 本软件默认状态下**不预置、不内置、不提供**任何影视内容、直播频道、节目单、订阅服务或第三方解析接口。
 3. 本软件开发者不参与任何内容的制作、上传、存储、分发或运营。
 

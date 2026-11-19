@@ -62,7 +62,7 @@ https://github.com/CatVodTVOfficial/TVBoxOSC\nhttps://github.com/q215613905/TVBo
     <string name="toast_local_missing_files_all_files">還有 %1$d 個同目錄檔案沒搬過來，請選擇該設定所在的文件夾（開啟「所有檔案存取」後可直接引用原目錄，不必搬檔案）</string>
     <string name="toast_storage_asked_by_spider">權限由爬蟲模組申請</string>
     <string name="toast_local_tree_denied">沒取得該設定所在文件夾的授權，已取消匯入（可再點一次重試）</string>
-    <string name="toast_local_tree_forbidden">該設定在系統不允許授權的目錄裡（儲存根／下載／Android），請將它放進自建文件夾（例如 手機儲存/ikunbox/）後再匯入</string>
+    <string name="toast_local_tree_forbidden">該設定在系統不允許授權的目錄裡（儲存根／下載／Android），請將它放進自建文件夾（例如 手機儲存/yuanbox/）後再匯入</string>
     <string name="config_pick_local">從本地選擇</string>
     <string name="search_history">搜尋記錄</string>
     <string name="search_history_clear">清除搜尋記錄</string>
@@ -88,6 +88,10 @@ https://github.com/CatVodTVOfficial/TVBoxOSC\nhttps://github.com/q215613905/TVBo
     <string name="dialog_source_disabled_message">「%1$s」先前導致應用程式死機，已被自動停用。\n\n若該源已經修好，可以重新啟用；否則切換後很可能再次閃退。</string>
     <string name="settings_group_preload_cache">預載與緩存</string>
     <string name="tab_records">記錄</string>
+    <string name="tab_history">
+    <string name="short_drama_title">短劇</string>
+    <string name="short_drama_empty">當前視頻源暫無短劇內容</string>歷史</string>
+    <string name="tab_search">搜尋</string>
     <string name="tab_following">追劇</string>
     <string name="tab_mine">我的</string>
     <string name="following_empty">暫無追劇</string>

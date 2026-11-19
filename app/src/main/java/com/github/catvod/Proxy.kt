@@ -1,7 +1,7 @@
 package com.github.catvod
 
-import com.ikun.ikunbox.server.RemoteServer
-import com.ikun.ikunbox.util.AppContextHolder
+import com.yuanbox.yuanbox.server.RemoteServer
+import com.yuanbox.yuanbox.util.AppContextHolder
 
 class Proxy {
 

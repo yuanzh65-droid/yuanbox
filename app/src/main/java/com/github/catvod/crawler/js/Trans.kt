@@ -1,6 +1,6 @@
 package com.github.catvod.crawler.js
 
-import com.ikun.ikunbox.util.LanguageManager
+import com.yuanbox.yuanbox.util.LanguageManager
 
 class Trans private constructor(private val trans: Boolean) {
 

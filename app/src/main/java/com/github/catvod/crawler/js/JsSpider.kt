@@ -5,11 +5,11 @@ import android.text.TextUtils
 import android.util.Base64
 
 import com.github.catvod.crawler.Spider
-import com.ikun.ikunbox.io.FileUtils
-import com.ikun.ikunbox.net.ProxyHeaderPolicy
-import com.ikun.ikunbox.util.AppLog
-import com.ikun.ikunbox.util.MD5
-import com.ikun.ikunbox.util.RegexUtils
+import com.yuanbox.yuanbox.io.FileUtils
+import com.yuanbox.yuanbox.net.ProxyHeaderPolicy
+import com.yuanbox.yuanbox.util.AppLog
+import com.yuanbox.yuanbox.util.MD5
+import com.yuanbox.yuanbox.util.RegexUtils
 
 import com.whl.quickjs.wrapper.ContextSetter
 import com.whl.quickjs.wrapper.Function

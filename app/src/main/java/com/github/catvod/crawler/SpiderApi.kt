@@ -7,10 +7,10 @@ import android.util.Base64
 import android.view.Surface
 import android.view.WindowManager
 
-import com.ikun.ikunbox.server.ControlManager
-import com.ikun.ikunbox.util.AppContextHolder
-import com.ikun.ikunbox.util.ActivityStack
-import com.ikun.ikunbox.util.AppLog
+import com.yuanbox.yuanbox.server.ControlManager
+import com.yuanbox.yuanbox.util.AppContextHolder
+import com.yuanbox.yuanbox.util.ActivityStack
+import com.yuanbox.yuanbox.util.AppLog
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject

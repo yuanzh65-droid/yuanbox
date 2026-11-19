@@ -1,6 +1,6 @@
 package com.github.catvod.crawler.js
 
-import com.ikun.ikunbox.util.AppLog
+import com.yuanbox.yuanbox.util.AppLog
 import okhttp3.Call
 import okhttp3.Response
 import okio.Buffer

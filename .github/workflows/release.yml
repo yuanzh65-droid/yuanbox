@@ -88,7 +88,7 @@ jobs:
               -alias key0 \
               -keyalg RSA -keysize 2048 -validity 10000 \
               -storepass 123456 -keypass 123456 \
-              -dname "CN=ikunbox, OU=ikunbox, O=ikunbox, L=Unknown, ST=Unknown, C=CN"
+              -dname "CN=yuanbox, OU=yuanbox, O=yuanbox, L=Unknown, ST=Unknown, C=CN"
           fi
           ls -l .key/app-release.jks
 
@@ -99,7 +99,7 @@ jobs:
         id: apk
         run: |
           set -euo pipefail
-          SRC=app/build/outputs/apk/release/ikunbox_release.apk
+          SRC=app/build/outputs/apk/release/yuanbox_release.apk
           if [ ! -f "$SRC" ]; then
             SRC="$(ls app/build/outputs/apk/release/*.apk | head -n1)"
             echo "::notice::使用默认 APK 路径: $SRC"
@@ -107,7 +107,7 @@ jobs:
           test -f "$SRC" || { echo "::error::未找到 release APK"; exit 1; }
 
           VERSION='${{ github.event.inputs.version }}'
-          OUT="ikunbox_${VERSION}_arm64-v8a.apk"
+          OUT="yuanbox_${VERSION}_arm64-v8a.apk"
           cp "$SRC" "$OUT"
 
           APKSIGNER="$(find "${ANDROID_HOME:-$ANDROID_SDK_ROOT}/build-tools" -name apksigner -type f | sort -r | head -n1)"
@@ -142,7 +142,7 @@ jobs:
             ' "$SRC" > release_body.md
           fi
           if [ ! -s release_body.md ]; then
-            echo "ikunbox $VERSION 版本发布（基于 AVBox 二次开发）。" > release_body.md
+            echo "yuanbox $VERSION 版本发布（基于 AVBox 二次开发）。" > release_body.md
           fi
           echo "----- release_body.md -----"
           cat release_body.md
