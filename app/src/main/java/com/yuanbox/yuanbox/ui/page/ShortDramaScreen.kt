@@ -157,7 +157,9 @@ fun ShortDramaScreen(
                             vm = recommendVm,
                             navStart = navStart,
                             navBottom = navBottom,
-                            onCardClick = { video -> handleCardClick(vm, video, context) },
+                            onCardClick = { videos, index ->
+                                openShortDramaPlayer(context, videos, index)
+                            },
                         )
                     } else {
                         val partition = partitions.firstOrNull { it.sort.id == tabId }
@@ -167,7 +169,9 @@ fun ShortDramaScreen(
                                 partition = partition,
                                 navStart = navStart,
                                 navBottom = navBottom,
-                                onCardClick = { video -> handleCardClick(vm, video, context) },
+                                onCardClick = { videos, index ->
+                                    openShortDramaPlayer(context, videos, index)
+                                },
                             )
                         }
                     }
@@ -230,7 +234,7 @@ private fun RecommendShortDramaGrid(
     vm: ShortDramaRecommendViewModel,
     navStart: Dp,
     navBottom: Dp,
-    onCardClick: (Movie.Video) -> Unit,
+    onCardClick: (List<Movie.Video>, Int) -> Unit,
 ) {
     val state by vm.recommendState.collectAsStateWithLifecycle()
     val queue by vm.queue.collectAsStateWithLifecycle()
@@ -291,7 +295,7 @@ private fun RecommendShortDramaGrid(
                         val staggerDelay = (index / columns) * 32
                         VodCard(
                             video = video,
-                            onClick = { onCardClick(video) },
+                            onClick = { onCardClick(videos, index) },
                             onLongClick = {},
                             modifier = Modifier.animateItemEntrance(
                                 entered = entered,
@@ -318,7 +322,7 @@ private fun ShortDramaGrid(
     partition: HomeViewModel.Partition?,
     navStart: Dp,
     navBottom: Dp,
-    onCardClick: (Movie.Video) -> Unit,
+    onCardClick: (List<Movie.Video>, Int) -> Unit,
 ) {
     val videos = partition?.videos.orEmpty()
     val state = partition?.state
@@ -377,7 +381,7 @@ private fun ShortDramaGrid(
                     val staggerDelay = (index / columns) * 32
                     VodCard(
                         video = video,
-                        onClick = { onCardClick(video) },
+                        onClick = { onCardClick(videos, index) },
                         onLongClick = {},
                         modifier = Modifier.animateItemEntrance(
                             entered = entered,
@@ -409,6 +413,10 @@ private fun ShortDramaGrid(
     }
 }
 
-private fun handleCardClick(vm: HomeViewModel, video: Movie.Video, context: android.content.Context) {
-    context.dispatchVodCardClick(video, onAction = { vm.handleAction(it) })
+private fun openShortDramaPlayer(
+    context: android.content.Context,
+    videos: List<Movie.Video>,
+    index: Int,
+) {
+    com.yuanbox.yuanbox.ui.ShortDramaPlayerActivity.start(context, videos, index)
 }

@@ -86,6 +86,11 @@
             android:name=".ui.PartitionListActivity"
             android:launchMode="singleTop" />
         <activity
+            android:name=".ui.ShortDramaPlayerActivity"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".ui.ThemeSettingsActivity" />
         <activity
             android:name=".ui.ConfigManageActivity"
