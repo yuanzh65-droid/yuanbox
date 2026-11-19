@@ -73,6 +73,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.yuanbox.yuanbox.R
 import com.yuanbox.yuanbox.bean.LiveChannelGroup
+import com.yuanbox.yuanbox.bean.LiveChannelItem
 import com.yuanbox.yuanbox.player.core.PlayState
 import com.yuanbox.yuanbox.ui.components.AVBoxAlertDialog
 import com.yuanbox.yuanbox.ui.components.AVBoxBottomSheet
