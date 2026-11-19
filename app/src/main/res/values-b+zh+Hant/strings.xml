@@ -205,7 +205,10 @@
     <string name="tab_records">記錄</string>
     <string name="tab_history">
     <string name="short_drama_title">短劇</string>
-    <string name="short_drama_empty">當前視頻源暫無短劇內容</string>歷史</string>
+    <string name="short_drama_empty">當前視頻源暫無短劇內容</string>
+    <string name="short_drama_recommend">推薦</string>
+    <string name="short_drama_source">短劇數據源</string>
+    <string name="short_drama_source_follow_home">跟隨首頁站點</string>歷史</string>
     <string name="tab_search">搜尋</string>
     <string name="tab_following">追劇</string>
     <string name="tab_mine">我的</string>

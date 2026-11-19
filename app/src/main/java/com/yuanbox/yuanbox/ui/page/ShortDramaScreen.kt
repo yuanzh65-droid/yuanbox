@@ -11,11 +11,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -46,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yuanbox.yuanbox.R
 import com.yuanbox.yuanbox.bean.Movie
 import com.yuanbox.yuanbox.bean.MovieSort
@@ -58,10 +57,17 @@ import com.yuanbox.yuanbox.ui.components.VodCard
 import com.yuanbox.yuanbox.ui.components.VodCardStyle
 import com.yuanbox.yuanbox.ui.components.animateItemEntrance
 import com.yuanbox.yuanbox.ui.components.rememberGridEntranceMap
+import com.yuanbox.yuanbox.util.ShortDramaSettings
+
+/** 推荐 tab 的稳定 id。 */
+private const val RECOMMEND_TAB_ID = "__short_drama_recommend__"
 
 /**
  * 短剧模式界面：识别当前视频源中的短剧分类，以竖版卡片入口展示。
  * 首页向右滑动进入本界面。
+ *
+ * 分类栏：默认「推荐」+ 真实短剧分类。
+ * 推荐流由 [ShortDramaRecommendViewModel] 洗牌提供；真实分类复用 [HomeViewModel] 的分区。
  */
 @Composable
 fun ShortDramaScreen(
@@ -75,10 +81,18 @@ fun ShortDramaScreen(
 
     val sorts by vm.sorts.collectAsStateWithLifecycle()
     val partitions by vm.partitions.collectAsStateWithLifecycle()
+    val recommendVm: ShortDramaRecommendViewModel = viewModel()
 
     val shortDramaSorts = remember(sorts) { ShortDramaDetector.filterShortDramaSorts(sorts) }
-    var activeSortId by remember(shortDramaSorts) {
-        mutableStateOf(shortDramaSorts.firstOrNull()?.id)
+    var activeTabId by remember(shortDramaSorts) {
+        mutableStateOf(RECOMMEND_TAB_ID)
+    }
+
+    // 推荐引擎：配置源与候选分类，进入时启动
+    val sourceKey = ShortDramaSettings.sourceKey()
+    LaunchedEffect(sourceKey, shortDramaSorts) {
+        recommendVm.configure(sourceKey, shortDramaSorts)
+        recommendVm.start()
     }
 
     AppTopBarScaffold(
@@ -120,28 +134,42 @@ fun ShortDramaScreen(
             } else {
                 ShortDramaSortTabs(
                     sorts = shortDramaSorts,
-                    selectedId = activeSortId,
+                    selectedId = activeTabId,
                     onSelect = { id ->
-                        activeSortId = id
-                        vm.ensureLoaded(id)
+                        activeTabId = id
+                        if (id == RECOMMEND_TAB_ID) {
+                            recommendVm.reshuffle()
+                        } else {
+                            vm.ensureLoaded(id)
+                        }
                     },
                     navStart = navStart,
+                    recommendLabel = stringResource(R.string.short_drama_recommend),
                 )
                 Crossfade(
-                    targetState = activeSortId,
+                    targetState = activeTabId,
                     animationSpec = tween(220),
                     modifier = Modifier.fillMaxSize(),
                     label = "shortDramaTab",
-                ) { sortId ->
-                    val partition = partitions.firstOrNull { it.sort.id == sortId }
-                    ProvideTmdbPosterLookup(vm) {
-                        ShortDramaGrid(
-                            vm = vm,
-                            partition = partition,
+                ) { tabId ->
+                    if (tabId == RECOMMEND_TAB_ID) {
+                        RecommendShortDramaGrid(
+                            vm = recommendVm,
                             navStart = navStart,
                             navBottom = navBottom,
                             onCardClick = { video -> handleCardClick(vm, video, context) },
                         )
+                    } else {
+                        val partition = partitions.firstOrNull { it.sort.id == tabId }
+                        ProvideTmdbPosterLookup(vm) {
+                            ShortDramaGrid(
+                                vm = vm,
+                                partition = partition,
+                                navStart = navStart,
+                                navBottom = navBottom,
+                                onCardClick = { video -> handleCardClick(vm, video, context) },
+                            )
+                        }
                     }
                 }
             }
@@ -155,28 +183,131 @@ private fun ShortDramaSortTabs(
     selectedId: String?,
     onSelect: (String) -> Unit,
     navStart: Dp,
+    recommendLabel: String,
 ) {
     LazyRow(
         contentPadding = PaddingValues(start = 16.dp + navStart, end = 16.dp, top = 8.dp, bottom = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
+        item(key = RECOMMEND_TAB_ID) {
+            SortTabChip(
+                label = recommendLabel,
+                selected = selectedId == RECOMMEND_TAB_ID,
+                onClick = { onSelect(RECOMMEND_TAB_ID) },
+            )
+        }
         items(count = sorts.size, key = { idx -> sorts[idx].id.orEmpty() }) { index ->
             val sort = sorts[index]
-            val selected = sort.id == selectedId
-            Text(
-                text = sort.name ?: "",
-                style = MaterialTheme.typography.labelLarge,
-                color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(18.dp))
-                    .background(
-                        if (selected) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.surfaceBright
-                    )
-                    .clickable { onSelect(sort.id.orEmpty()) }
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            SortTabChip(
+                label = sort.name ?: "",
+                selected = sort.id == selectedId,
+                onClick = { onSelect(sort.id.orEmpty()) },
             )
+        }
+    }
+}
+
+@Composable
+private fun SortTabChip(label: String, selected: Boolean, onClick: () -> Unit) {
+    Text(
+        text = label,
+        style = MaterialTheme.typography.labelLarge,
+        color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1,
+        modifier = Modifier
+            .clip(RoundedCornerShape(18.dp))
+            .background(
+                if (selected) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.surfaceBright
+            )
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+    )
+}
+
+@Composable
+private fun RecommendShortDramaGrid(
+    vm: ShortDramaRecommendViewModel,
+    navStart: Dp,
+    navBottom: Dp,
+    onCardClick: (Movie.Video) -> Unit,
+) {
+    val state by vm.recommendState.collectAsStateWithLifecycle()
+    val queue by vm.queue.collectAsStateWithLifecycle()
+
+    when (val s = state) {
+        is ShortDramaRecommendViewModel.RecommendState.Loading -> Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            ContainedLoadingIndicator(Modifier.size(64.dp))
+        }
+
+        is ShortDramaRecommendViewModel.RecommendState.Empty -> LoadStateBox(
+            state = LoadState.Empty,
+            emptyText = stringResource(R.string.short_drama_empty),
+            errorText = "",
+            retryText = "",
+            emptyIconRes = R.drawable.ic_empty_record,
+            modifier = Modifier.fillMaxSize(),
+        )
+
+        is ShortDramaRecommendViewModel.RecommendState.Error -> LoadStateBox(
+            state = LoadState.Error(),
+            emptyText = "",
+            errorText = s.message,
+            retryText = stringResource(R.string.common_retry),
+            onRetry = { vm.start() },
+            modifier = Modifier.fillMaxSize(),
+        )
+
+        else -> {
+            val videos = queue
+            BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                val columns = WindowSize.gridColumns(
+                    availableWidthDp = (maxWidth - 32.dp - navStart).value.toInt(),
+                    minColumns = 3,
+                )
+                val gridState = remember { LazyGridState() }
+                val entranceMap = rememberGridEntranceMap(gridState)
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(columns),
+                    state = gridState,
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(
+                        start = 16.dp + navStart,
+                        end = 16.dp,
+                        top = 8.dp,
+                        bottom = 88.dp + navBottom,
+                    ),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    itemsIndexed(
+                        videos,
+                        key = { index, video -> "rec_${index}_${video.id}_${video.name}" },
+                    ) { index, video ->
+                        val entered = entranceMap[index] ?: false
+                        val staggerDelay = (index / columns) * 32
+                        VodCard(
+                            video = video,
+                            onClick = { onCardClick(video) },
+                            onLongClick = {},
+                            modifier = Modifier.animateItemEntrance(
+                                entered = entered,
+                                delayMillis = staggerDelay,
+                            ),
+                            style = VodCardStyle.Stacked,
+                            showCircularLoading = true,
+                        )
+                    }
+                    item(key = "rec_more", span = { GridItemSpan(maxLineSpan) }) {
+                        LaunchedEffect(videos.size) {
+                            if (videos.size <= 8) vm.ensureMore()
+                        }
+                    }
+                }
+            }
         }
     }
 }

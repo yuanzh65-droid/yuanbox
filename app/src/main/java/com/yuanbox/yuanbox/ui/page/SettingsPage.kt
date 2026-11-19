@@ -62,6 +62,8 @@ import com.yuanbox.yuanbox.util.HistoryHelper
 import com.yuanbox.yuanbox.util.SearchSettingsState
 import com.yuanbox.yuanbox.util.SpiderStorageNotice
 import com.yuanbox.yuanbox.api.TmdbPoster
+import com.yuanbox.yuanbox.api.ApiConfig
+import com.yuanbox.yuanbox.util.ShortDramaSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -227,6 +229,9 @@ fun SettingsPage(
                     )
                 }
                 SettingsCard(SettingsCardPosition.MIDDLE) {
+                    ShortDramaSourceRow()
+                }
+                SettingsCard(SettingsCardPosition.MIDDLE) {
                     SettingsOptionMenuRow(
                         title = stringResource(R.string.settings_history_limit),
                         subtitle = stringResource(R.string.settings_history_limit_subtitle),
@@ -325,6 +330,39 @@ fun SettingsPage(
         AboutSheet(versionName = versionName, onDismiss = { aboutSheet = false })
     }
 
+}
+
+@Composable
+private fun ShortDramaSourceRow() {
+    val sources = ApiConfig.get().switchSourceBeanList()
+    val followHomeLabel = stringResource(R.string.short_drama_source_follow_home)
+    // 选项 = 「跟随首页站点」 + 各可切换源
+    val options = remember(sources) { listOf(followHomeLabel) + sources.map { it.name ?: it.key.orEmpty() } }
+    val currentKey = ShortDramaSettings.hasExplicitSource()
+    val selectedIndex = if (currentKey) {
+        val key = ShortDramaSettings.sourceKey()
+        val idx = sources.indexOfFirst { it.key == key }
+        if (idx >= 0) idx + 1 else 0
+    } else {
+        0
+    }
+    val currentLabel = if (selectedIndex == 0) followHomeLabel
+    else ShortDramaSettings.currentSource().name ?: followHomeLabel
+    SettingsOptionMenuRow(
+        title = stringResource(R.string.short_drama_source),
+        subtitle = stringResource(R.string.short_drama_source_follow_home),
+        iconRes = R.drawable.ic_settings_api,
+        valueText = currentLabel,
+        options = options,
+        selectedIndex = selectedIndex,
+        onSelect = { idx ->
+            if (idx == 0) {
+                ShortDramaSettings.clearSource()
+            } else {
+                sources.getOrNull(idx - 1)?.let { ShortDramaSettings.setSource(it) }
+            }
+        },
+    )
 }
 
 @Composable

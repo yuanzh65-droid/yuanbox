@@ -20,6 +20,7 @@ object KVKeys {
     const val BOOT_DISABLED_JARS = "boot_disabled_jars"
     const val LIVE_API_HISTORY = "live_api_history"
     const val HOME_API = "home_api"
+    const val SHORT_DRAMA_API = "short_drama_api"
     const val DEFAULT_PARSE = "parse_default"
     const val EXO_DECODE = "exo_decode"
     const val SUBTITLE_TEXT_STYLE = "subtitle_text_style"

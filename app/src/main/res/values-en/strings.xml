@@ -205,7 +205,10 @@
     <string name="tab_records">Records</string>
     <string name="tab_history">
     <string name="short_drama_title">Short Drama</string>
-    <string name="short_drama_empty">No short drama content in the current source</string>History</string>
+    <string name="short_drama_empty">No short drama content in the current source</string>
+    <string name="short_drama_recommend">Recommended</string>
+    <string name="short_drama_source">Short drama source</string>
+    <string name="short_drama_source_follow_home">Follow home site</string>History</string>
     <string name="tab_search">Search</string>
     <string name="tab_following">Following</string>
     <string name="tab_mine">Me</string>
