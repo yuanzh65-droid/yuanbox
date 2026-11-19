@@ -112,6 +112,22 @@ internal fun PlayerActionIcons(
             expand = spread,
             onClick = actions::onVideoTrackClicked,
         )
+        PlayerActionIconButton(
+            iconRes = R.drawable.ic_play_render,
+            contentDescription = stringResource(R.string.settings_play_render),
+            box = size,
+            iconSize = iconSize,
+            expand = spread,
+            onClick = actions::onRenderToggleClicked,
+        )
+        PlayerActionIconButton(
+            iconRes = R.drawable.ic_play_decode,
+            contentDescription = stringResource(R.string.settings_play_decode),
+            box = size,
+            iconSize = iconSize,
+            expand = spread,
+            onClick = actions::onDecodeToggleClicked,
+        )
     }
 }
 

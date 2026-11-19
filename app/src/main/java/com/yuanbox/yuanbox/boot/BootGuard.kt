@@ -65,10 +65,15 @@ object BootGuard {
             if (file == null) return
             val parent = file.parentFile
             if (parent != null && !parent.exists()) parent.mkdirs()
+            // 崩溃标记：第一行 elapsedRealtime，第二行上下文快照（内存/前后台/当前页面）
+            val context = AppContextHolder.context()
+            val snapshot = com.yuanbox.yuanbox.util.AppForegroundTracker.snapshot(context)
+            val content = java.lang.String.valueOf(SystemClock.elapsedRealtime()) + "\n" + snapshot
             FileOutputStream(file).use { out ->
-                out.write(java.lang.String.valueOf(SystemClock.elapsedRealtime()).toByteArray(StandardCharsets.UTF_8))
+                out.write(content.toByteArray(StandardCharsets.UTF_8))
                 out.flush()
             }
+            AppLog.i("echo-boot-guard: crash marker written, " + snapshot)
         } catch (ignored: Throwable) {
         }
     }
@@ -137,7 +142,10 @@ object BootGuard {
             var value = -1L
             if (len > 0) {
                 try {
-                    value = java.lang.Long.parseLong(String(buf, 0, len, StandardCharsets.UTF_8).trim { it <= ' ' })
+                    // 第一行是 elapsedRealtime，第二行是上下文快照
+                    val text = String(buf, 0, len, StandardCharsets.UTF_8)
+                    val firstLine = text.substringBefore('\n').trim { it <= ' ' }
+                    value = java.lang.Long.parseLong(firstLine)
                 } catch (ignored: NumberFormatException) {
                     value = -1L
                 }

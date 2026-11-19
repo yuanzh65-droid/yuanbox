@@ -110,6 +110,16 @@ internal class PlayerActionsDelegate(private val host: VideoPlayerController) : 
         host.config.applySpeed(1.0f)
     }
 
+    override fun onRenderToggleClicked() {
+        keepControlsAlive()
+        host.config.applyRender()
+    }
+
+    override fun onDecodeToggleClicked() {
+        keepControlsAlive()
+        host.config.applyDecodeToggle()
+    }
+
     override fun onPlayerClicked() {
         keepControlsAlive()
         val cfg = host.playerConfig ?: return

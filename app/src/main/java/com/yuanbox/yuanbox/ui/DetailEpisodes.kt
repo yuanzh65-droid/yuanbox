@@ -415,11 +415,18 @@ internal fun EpisodeSheet(vm: DetailViewModel, slideFromEnd: Boolean, showQualit
                 Spacer(modifier = Modifier.height(8.dp))
             }
             val maxNameLength = episodes.maxOfOrNull { it.name?.length ?: 0 } ?: 0
-            val gridColumnCount = when {
-                maxNameLength <= 4 -> if (slideFromEnd) 2 else 4
-                maxNameLength <= 12 -> 2
-                else -> 1
+            // 横屏（右侧滑出）时用 8 列、格子减半；竖屏按名字长度自适应列数
+            val gridColumnCount = if (slideFromEnd) {
+                8
+            } else {
+                when {
+                    maxNameLength <= 4 -> 4
+                    maxNameLength <= 12 -> 2
+                    else -> 1
+                }
             }
+            val gridItemHeight = if (slideFromEnd) 30.dp else 40.dp
+            val gridItemFontSize = if (slideFromEnd) 11.sp else 13.sp
             val gridModifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -444,14 +451,14 @@ internal fun EpisodeSheet(vm: DetailViewModel, slideFromEnd: Boolean, showQualit
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(40.dp),
+                            .height(gridItemHeight),
                         label = {
                             Text(
                                 text = ep.name ?: (index + 1).toString(),
                                 maxLines = 1,
                                 softWrap = false,
                                 textAlign = TextAlign.Center,
-                                fontSize = 13.sp,
+                                fontSize = gridItemFontSize,
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier.fillMaxWidth(),
                             )

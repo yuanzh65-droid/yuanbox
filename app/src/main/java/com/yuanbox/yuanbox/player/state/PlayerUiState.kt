@@ -599,6 +599,8 @@ interface PlayerActions {
     fun onSpeedLongClicked()
     fun onPlayerClicked()
     fun onPlayerLongClicked()
+    fun onRenderToggleClicked()
+    fun onDecodeToggleClicked()
     fun onTimeStartClicked()
     fun onTimeStartLongClicked()
     fun onTimeEndClicked()

@@ -229,6 +229,30 @@ internal class PlayerConfigDelegate(private val host: VideoPlayerController) {
         host.listener?.replay(false)
     }
 
+    /** 切换渲染器：SurfaceView(1) <-> TextureView(其它)。 */
+    fun applyRender() {
+        host.actions.keepControlsAlive()
+        val cfg = host.playerConfig ?: return
+        val current = cfg.optInt("pr", com.yuanbox.yuanbox.util.KV.get(com.yuanbox.yuanbox.util.KVKeys.PLAY_RENDER, 1))
+        val next = if (current == 1) 0 else 1
+        host.listener?.updatePlayerCfg(suppressAutoSwitch = true) { it.put("pr", next) }
+        host.listener?.replay(false)
+        AppLog.i("echo-render-switch: pr=$next")
+    }
+
+    /** 切换硬/软解码，返回切换后的显示名。 */
+    fun applyDecodeToggle() {
+        host.actions.keepControlsAlive()
+        val cfg = host.playerConfig ?: return
+        val current = decodeDisplayedIndex(cfg)
+        applyDecode(if (current == 1) "硬解码" else "软解码") // i18n: keep
+    }
+
+    fun currentRenderIndex(cfg: JSONObject?): Int {
+        val c = cfg ?: return com.yuanbox.yuanbox.util.KV.get(com.yuanbox.yuanbox.util.KVKeys.PLAY_RENDER, 1)
+        return c.optInt("pr", com.yuanbox.yuanbox.util.KV.get(com.yuanbox.yuanbox.util.KVKeys.PLAY_RENDER, 1))
+    }
+
     fun applySpeedWhenReady() {
         if (host.isInPlaybackState()) {
             speedRetryCount = 0

@@ -220,7 +220,7 @@ fun PlayerSideButtons(state: PlayerUiState, actions: PlayerActions, iconBox: Dp)
             onClick = actions::onRotateClicked,
         )
         SideButton(
-            iconRes = if (state.locked) R.drawable.icon_lock else R.drawable.icon_unlock,
+            iconRes = if (state.locked) R.drawable.icon_unlock else R.drawable.icon_lock,
             contentDescription = stringResource(R.string.player_lock),
             startSide = false,
             edge = edge,

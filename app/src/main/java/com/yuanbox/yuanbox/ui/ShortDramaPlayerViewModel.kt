@@ -140,6 +140,12 @@ class ShortDramaPlayerViewModel : ViewModel() {
                 return@launch
             }
             final = final.copy(playIndex = final.playIndex.coerceIn(0, list.size - 1))
+            val note = final.seriesMap?.get(final.playFlag)?.get(final.playIndex)?.name ?: ""
+            final = final.copy(playNote = note)
+            // 写入观看历史（短剧播放器不经过 DetailViewModel，需手动写入历史条目）
+            if (!HistoryHelper.isIncognito()) {
+                com.yuanbox.yuanbox.data.HistoryWriter.write(item.sourceKey, final)
+            }
             val session = PlaybackSession(final, item.sourceKey, false)
             _state.value = PlayerState.Ready(session, item.name)
         }

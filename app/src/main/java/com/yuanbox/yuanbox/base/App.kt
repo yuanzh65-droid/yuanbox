@@ -16,6 +16,7 @@ import com.yuanbox.yuanbox.net.HttpClients
 import com.yuanbox.yuanbox.server.ControlManager
 import com.yuanbox.yuanbox.util.AppContextHolder
 import com.yuanbox.yuanbox.util.ActivityStack
+import com.yuanbox.yuanbox.util.AppForegroundTracker
 import com.yuanbox.yuanbox.util.EpgUtil
 import com.yuanbox.yuanbox.util.KVKeys
 import com.yuanbox.yuanbox.util.KV
@@ -53,6 +54,7 @@ class App : Application() {
         AppContextHolder.install(this)
         BootGuard.install()
         bootMark("bootGuard")
+        AppForegroundTracker.install(this)
         initParams()
         bootMark("initParams")
         Probe.trace("boot:httpClients") { HttpClients.init() }
