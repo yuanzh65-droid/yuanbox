@@ -16,8 +16,8 @@ android {
         applicationId = "com.yuanbox.yuanbox"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 5
-        versionName = "1.1.5"
+        versionCode = 6
+        versionName = "1.2.0"
         multiDexEnabled = true
         ndk {
             abiFilters += setOf("arm64-v8a")
