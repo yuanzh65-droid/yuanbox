@@ -167,7 +167,7 @@ private fun ShortDramaPlayerScreen(
             is ShortDramaPlayerViewModel.PlayerState.Loading -> {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
-                        text = context.getString(R.string.common_loading),
+                        text = context.getString(R.string.common_loading_more),
                         color = Color.White,
                         style = MaterialTheme.typography.bodyMedium,
                     )
