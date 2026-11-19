@@ -536,6 +536,15 @@ class LivePlayActivity : BaseActivity() {
         clickLiveChannel(position)
     }
 
+    /** 三栏联动：点击源直接换源并重播。 */
+    internal fun selectChannelSource(sourceIndex: Int) {
+        val item = currentLiveChannelItem ?: return
+        if (sourceIndex < 0 || sourceIndex >= item.sourceNum) return
+        if (sourceIndex == vm.currentSourceIndex()) return
+        vm.updateSourceIndex(sourceIndex)
+        playChannel(currentChannelGroupIndex, currentLiveChannelIndex, true)
+    }
+
     private fun clickLiveChannel(position: Int) {
         playChannel(selectedChannelGroupIndex, position, false)
     }
@@ -764,7 +773,9 @@ class LivePlayActivity : BaseActivity() {
         ),
         list = LiveChannelListActions(
             onToggleGroup = { toggleChannelGroup(it) },
+            onSelectGroup = { groupIndex -> selectChannelGroup(groupIndex, -1) },
             onSelectChannel = { groupIndex, position -> selectChannel(groupIndex, position) },
+            onSelectSource = { sourceIndex -> selectChannelSource(sourceIndex) },
         ),
         settings = LiveSettingsActions(
             onDismiss = { vm.hideSettingsSheet() },

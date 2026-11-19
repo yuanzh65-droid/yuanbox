@@ -8,11 +8,13 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +31,7 @@ import com.yuanbox.yuanbox.ui.base.BaseActivity
 import com.yuanbox.yuanbox.ui.player.PlayContainer
 import com.yuanbox.yuanbox.ui.theme.AVBoxTheme
 import com.yuanbox.yuanbox.ui.theme.enableTransparentEdgeToEdge
+import com.yuanbox.yuanbox.util.DanmuSettingsState
 import kotlin.math.abs
 
 /**
@@ -197,6 +200,33 @@ private fun ShortDramaPlayerScreen(
                     .statusBarsPadding()
                     .padding(top = 12.dp),
             )
+        }
+
+        // 左下角「弹」字方框开关（即时生效，与详情共用弹幕设置）
+        if (state is ShortDramaPlayerViewModel.PlayerState.Ready) {
+            val danmuOpen = DanmuSettingsState.config.open
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 16.dp, bottom = 24.dp)
+                    .background(
+                        color = if (danmuOpen) Color(0xCCFFFFFF) else Color(0x66000000),
+                        shape = RoundedCornerShape(8.dp),
+                    )
+                    .clickable {
+                        val target = !DanmuSettingsState.config.open
+                        DanmuSettingsState.open = target
+                        ensureContainer().applyDanmuSettings(true)
+                    }
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = "弹",
+                    color = if (danmuOpen) Color.Black else Color.White,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
         }
     }
 }

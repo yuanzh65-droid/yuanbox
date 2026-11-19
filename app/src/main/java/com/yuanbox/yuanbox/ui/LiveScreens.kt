@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -210,7 +212,9 @@ private fun LiveReadyContent(state: LivePlayUiState, actions: LivePlayActions) {
             ChannelListSection(
                 channelList = state.channelList,
                 onToggleGroup = actions.list.onToggleGroup,
+                onSelectGroup = actions.list.onSelectGroup,
                 onSelectChannel = actions.list.onSelectChannel,
+                onSelectSource = actions.list.onSelectSource,
                 modifier = Modifier.weight(1f),
             )
         }
@@ -447,51 +451,157 @@ private fun ChannelInfoSection(
 private fun ChannelListSection(
     channelList: LiveChannelListUi,
     onToggleGroup: (Int) -> Unit,
+    onSelectGroup: (Int) -> Unit,
     onSelectChannel: (Int, Int) -> Unit,
+    onSelectSource: (Int) -> Unit,
     modifier: Modifier,
 ) {
-    val listState = rememberLazyListState()
-    LaunchedEffect(channelList.scrollRequestId) {
-        var target = -1
-        for (i in channelList.rows.indices) {
-            val row = channelList.rows[i]
-            if (row.channel != null &&
-                row.group?.groupIndex == channelList.playingGroupIndex &&
-                row.channel.channelIndex == channelList.playingChannelIndex
-            ) {
-                target = i
-                break
+    // 从扁平 rows 提取分组列表（左栏）与选中分组的频道列表（中栏）
+    val groups = remember(channelList.rows) {
+        channelList.rows.filter { it.channel == null && it.group != null }
+    }
+    val selectedGroupIndex = channelList.tappedGroupIndex
+    val channels = remember(channelList.rows, selectedGroupIndex) {
+        channelList.rows.filter { it.channel != null && it.group?.groupIndex == selectedGroupIndex }
+    }
+    val playingChannel = channelList.playingChannel
+    val sourceNames = playingChannel?.channelSourceNames.orEmpty()
+    val playingSourceIndex = channelList.playingSourceIndex
+
+    val navBarInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    Row(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        // 左栏：分组
+        val groupState = rememberLazyListState()
+        LaunchedEffect(channelList.scrollRequestId, channelList.playingGroupIndex) {
+            val target = groups.indexOfFirst { it.group?.groupIndex == channelList.playingGroupIndex }
+            if (target > 0) groupState.animateScrollToItem(max(0, target - 1))
+        }
+        LazyColumn(
+            state = groupState,
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
+            contentPadding = PaddingValues(bottom = navBarInset + 24.dp),
+        ) {
+            items(groups, key = { it.key }) { row ->
+                val group = row.group ?: return@items
+                val selected = group.groupIndex == selectedGroupIndex
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(if (selected) MaterialTheme.colorScheme.cardContainer else Color.Transparent)
+                        .clickable { onSelectGroup(group.groupIndex) }
+                        .padding(horizontal = 12.dp, vertical = 12.dp),
+                ) {
+                    Text(
+                        text = group.groupName ?: "",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                        color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
         }
-        if (target > 0) listState.animateScrollToItem(max(0, target - 2))
-    }
-    val navBarInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    LazyColumn(
-        state = listState,
-        modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(bottom = navBarInset + 24.dp),
-    ) {
-        itemsIndexed(channelList.rows, key = { _, row -> row.key }) { _, row ->
-            val channel = row.channel
-            if (channel == null) {
-                val group = row.group ?: return@itemsIndexed
-                GroupHeaderRow(
-                    group = group,
-                    expanded = channelList.expandedGroups.contains(group.groupIndex),
-                    locked = channelList.lockedGroups.contains(group.groupIndex),
-                    onToggle = { onToggleGroup(group.groupIndex) },
-                )
-            } else {
+
+        // 中栏：选中分组的频道
+        val channelState = rememberLazyListState()
+        LaunchedEffect(channelList.scrollRequestId, channelList.playingChannelIndex) {
+            val target = channels.indexOfFirst { it.channel?.channelIndex == channelList.playingChannelIndex }
+            if (target > 0) channelState.animateScrollToItem(max(0, target - 1))
+        }
+        LazyColumn(
+            state = channelState,
+            modifier = Modifier
+                .weight(1.4f)
+                .fillMaxHeight(),
+            contentPadding = PaddingValues(bottom = navBarInset + 24.dp),
+        ) {
+            items(channels, key = { it.key }) { row ->
                 val group = row.group
-                ChannelRow(
-                    row = row,
-                    selected = group != null &&
-                        group.groupIndex == channelList.playingGroupIndex &&
-                        channel.channelIndex == channelList.playingChannelIndex,
+                val channel = row.channel ?: return@items
+                val selected = group?.groupIndex == channelList.playingGroupIndex &&
+                    channel.channelIndex == channelList.playingChannelIndex
+                ChannelRowCompact(
+                    channel = channel,
+                    selected = selected,
                     onSelect = { onSelectChannel(group?.groupIndex ?: 0, row.channelPos) },
                 )
             }
         }
+
+        // 右栏：当前播放频道的源
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight(),
+            contentPadding = PaddingValues(bottom = navBarInset + 24.dp),
+        ) {
+            if (sourceNames.isEmpty() || playingChannel == null) {
+                item(key = "no_source") {
+                    Text(
+                        text = stringResource(R.string.live_no_source),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
+                    )
+                }
+            } else {
+                itemsIndexed(sourceNames) { index, name ->
+                    val selected = index == playingSourceIndex
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(if (selected) MaterialTheme.colorScheme.cardContainer else Color.Transparent)
+                            .clickable { onSelectSource(index) }
+                            .padding(horizontal = 12.dp, vertical = 10.dp),
+                    ) {
+                        Text(
+                            text = name.ifEmpty { stringResource(R.string.live_source_default, index + 1) },
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ChannelRowCompact(
+    channel: LiveChannelItem,
+    selected: Boolean,
+    onSelect: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(if (selected) MaterialTheme.colorScheme.cardContainer else Color.Transparent)
+            .clickable(onClick = onSelect)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = channel.channelNum.toString(),
+            fontSize = 11.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.width(26.dp),
+        )
+        Text(
+            text = channel.channelName ?: "",
+            fontSize = 14.sp,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 

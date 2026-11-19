@@ -296,6 +296,8 @@
     <string name="live_volume">Volume</string>
     <string name="live_gesture_hint">%1$s %2$d%%</string>
     <string name="live_please_select_channel">Select a channel first</string>
+    <string name="live_no_source">No source</string>
+    <string name="live_source_default">Source %1$d</string>
     <string name="live_wrong_password">Wrong password</string>
     <string name="live_repo_entry_not_deletable">This list comes from the repo URL and cannot be deleted separately</string>
     <string name="live_active_config_not_deletable">The active config cannot be deleted</string>

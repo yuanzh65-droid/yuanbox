@@ -296,6 +296,8 @@
     <string name="live_volume">音量</string>
     <string name="live_gesture_hint">%1$s %2$d%%</string>
     <string name="live_please_select_channel">请先选择频道</string>
+    <string name="live_no_source">暂无源</string>
+    <string name="live_source_default">源 %1$d</string>
     <string name="live_wrong_password">密码错误</string>
     <string name="live_repo_entry_not_deletable">仓列表来自仓地址,不能单独删除</string>
     <string name="live_active_config_not_deletable">当前使用中的配置不能删除</string>
