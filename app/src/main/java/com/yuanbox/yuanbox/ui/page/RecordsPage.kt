@@ -107,7 +107,6 @@ fun RecordsPage(
     LaunchedEffect(Unit) {
         AppBootstrap.state.collect { boot ->
             if (boot is AppBootstrap.Boot.Ready) {
-                collectVm.resolveSourceNames()
                 followingVm.refresh()
             }
         }
